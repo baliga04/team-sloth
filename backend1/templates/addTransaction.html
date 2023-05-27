@@ -5,15 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a transaction</title>
-    <link href="{{url_for('static', filename = 'styles.css')}}" rel="stylesheet">
+    <!--link href="{{url_for('static', filename = 'styles.css')}}" rel="stylesheet"-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
-<body>
-    <form action="{{url_for('add_transaction')}}" method="POST">
-        <input type="text" name="description" placeholder="Enter Description" required autofocus>
-        <input type="number" name="amount" placeholder="Enter Amount" required autofocus>
-        <input type="date" name="date" placeholder="Enter Date" required autofocus>
-        <input type="text" name="category" placeholder="Enter Category" required autofocus>
-        <button ><h3>Add Transaction</h3></button>
+<body bgcolor="#F8F1F1">
+    <form action="{{url_for('add_transaction')}}" method="POST" style="margin-left: 40%;margin-top: 5%;">
+        <label for="description">Description</label><br>
+        <input type="text" name="description" placeholder="Enter Description" required autofocus><br><br>
+        <label for="amount">Amount</label><br>
+        <input type="number" name="amount" placeholder="Enter Amount" required autofocus><br><br>
+        <label for="date">Date</label><br>
+        <input type="date" name="date" placeholder="Enter Date" required autofocus><br><br>
+        <label for="category">Category</label><br>
+        <input type="text" name="category" placeholder="Enter Category" required autofocus><br><br>
+        <button style="color:aliceblue; background-color:#025464;" ><h3>Add Transaction</h3></button>
     </form>
 </body>
