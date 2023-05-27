@@ -9,10 +9,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 <body>
-    Home.
-    You are logged in.
-    <a href="{{url_for('logout')}}">Logout</a>
-    <a href="{{url_for('landingpage')}}">Home</a>
-    <a href="{{url_for('add_transaction')}}">Add a transaction</a>
-    <a href="{{url_for('view_transactions')}}">View Transactions</a>
+    <p>Home.
+    You are logged in.</p>
+    <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('landingpage')}}">Home</a><br></li>
+        <li><a href="{{url_for('add_transaction')}}">Add a transaction</a><br></li>
+        <li><a href="{{url_for('view_transactions')}}">View Transactions</a><br></li>
+        <li><a href="{{url_for('view_master_table')}}">View Master Table</a><br></li>
+        <li><a href="{{url_for('create_category')}}">Create a Category & Budget</a><br></li>
+        <li><a href="{{url_for('view_categories')}}">View your Categories & Budgets</a><br></li>
+    </ul>
 </body>

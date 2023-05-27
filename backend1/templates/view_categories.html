@@ -38,45 +38,40 @@
                 background-color: #ffffff;
                 box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
             }
-            .searchfield {
-                width: 80%;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                margin: 10px 0;
-                padding: 10px;
-                box-sizing: border-box;
-                margin-left: 10%;
-            }
          
         </style>
     <head>
         <title>
-            Transactions
+            My Categories
         </title>
     </head>
     <body bgcolor="#F8F1F1">
-        <h2>Transactions</h2>
-        <!-- The Search field -->
-        <form action="{{url_for('view_transactions')}}" method="POST">
-            <input type="search" placeholder="Search Transactions by Name, Date, Amount ..." name="searchfield" class="searchfield"/>
-        </form>
-        <a href="{{url_for('add_transaction')}}"><input type="submit" value="Add Transaction" style="margin-left:75%;"></a><br>
-        <table style="width:100%" class="container" class="live-search-list">
+        {% with messages= get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <h2>Categories</h2>
+        <a href="{{url_for('create_category')}}"><input type="submit" value="Add a new Category" style="margin-left:75%;"></a><br>
+        <table style="width:100%" class="container">
             <tr class="table-header">
-              <th>Date</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Amount</th>
+              <th>Type</th>
+              <th>Category Name</th>
+              <th>Budget</th>
+              <!-- <th>Edit/Delete</th> -->
             </tr>
-            {% for transaction in transactions %}
+            {% for category in categories %}
                 <tr class="table-row">
-                <td>{{transaction.DateTime}}</td>
-                <td>{{transaction.Category}}</td>
-                <td>{{transaction.Description}}</td>
-                <td>{{transaction.Amount}}</td>
+                    <td>{{category.Type}}</td>
+                    <td>{{category.Category}}</td>
+                    <td>{{category.Budget}}</td>
                 </tr>
             {% endfor %}
-        </table>
+          </table>
 
     </body>
 </html>

@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from sqlalchemy import or_
 import os
 import re
 from flask_bcrypt import Bcrypt
@@ -20,9 +21,11 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 class Budgets(db.Model):
-    UserID: int = db.Column(db.Integer, db.ForeignKey('user.UserID'), primary_key=True)
-    Category: str = db.Column(db.String(50), primary_key=True)
+    BudgetID: int = db.Column(db.Integer, primary_key=True)
+    UserID: int = db.Column(db.Integer, db.ForeignKey('user.UserID'))
+    Category: str = db.Column(db.String(50), nullable=False)
     Budget: float = db.Column(db.Float, nullable=False)
+    Type: str = db.Column(db.String(10), nullable=False) #Expense or Income
     
     def __repr__(self):
          return f'<Budget>'
@@ -48,6 +51,7 @@ class Transactions(db.Model):
     Category: str = db.Column(db.String(50), nullable=False)
     DateTime: str = db.Column(db.DateTime(timezone=True), nullable=False)
     Description: str = db.Column(db.String(100), nullable=False)
+    Type: str = db.Column(db.String(10), nullable=False) #Expense or Income
     
     def __repr__(self):
          return f'<Transactions>'
@@ -193,12 +197,14 @@ def add_transaction():
         return redirect(url_for('form_login'))
     
     if request.method == 'GET':
-        return render_template('addTransaction.html')
+        categories = Budgets.query.filter_by(UserID=session.get('UserID')).all()
+        return render_template('addTransaction.html',categories=categories)
     
     amount=request.form["amount"]
     category=request.form["category"]
     description=request.form["description"]
     date=request.form["date"]
+    type=Budgets.query.filter_by(Category=category).first().Type
 
     # Checking for empty fields
     if not amount and not amount.strip():
@@ -215,21 +221,177 @@ def add_transaction():
         return redirect(url_for('add_transaction'))
     
     # Adding transaction to database
-    new_transaction =Transactions( Amount=amount,
+    new_transaction =Transactions(  Amount=amount,
                                     Category=category,
                                     Description=description,
                                     DateTime=date,
-                                    UserID=session.get('UserID')
+                                    UserID=session.get('UserID'),
+                                    Type=type
                                 )
     db.session.add(new_transaction)
     db.session.commit()
     flash("Transaction successfully added")
     return render_template('addTransaction.html')
 
-@app.route('/view_transactions')
+@app.route('/view_transactions',methods=["POST","GET"])
 def view_transactions():
-    transactions = Transactions.query.filter_by(UserID=session.get('UserID')).all()
+    if request.method == 'GET':
+        transactions = Transactions.query.filter_by(UserID=session.get('UserID')).order_by(Transactions.DateTime.desc()).all()
+    else:
+        # Searching through your transactions
+        searchQuery = request.form["searchfield"]
+        transactions = Transactions.query.filter_by(UserID=session.get('UserID')).filter(or_(Transactions.Description.like(f'%{searchQuery}%'),Transactions.Category.like(f'%{searchQuery}%'),Transactions.Amount.like(f'%{searchQuery}%'),Transactions.DateTime.like(f'%{searchQuery}%'))).order_by(Transactions.DateTime.desc()).all()
+        
     return render_template('transaction.html',transactions=transactions)
+
+@app.route('/delete_transaction/<int:id>')
+def delete_transaction(id):
+    # IMPLEMENT THIS
+    transaction = Transactions.query.get_or_404(id)
+    db.session.delete(transaction)
+    db.session.commit()
+    flash("Transaction successfully deleted")
+    return redirect(url_for('view_transactions'))
+
+@app.route('/edit_transaction/<int:id>',methods=["POST","GET"])
+def edit_transaction(id):
+    pass
+    # IMPLEMENT THIS
+    # transaction = Transactions.query.get_or_404(id)
+    # if request.method == 'GET':
+    #     return render_template('editTransaction.html',transaction=transaction)
+    
+    # amount=request.form["amount"]
+    # category=request.form["category"]
+    # description=request.form["description"]
+    # date=request.form["date"]
+    # type=request.form["type"]
+
+    # # Checking for empty fields
+    # if not amount and not amount.strip():
+    #     flash("Error: Amount is mandatory")
+    #     return redirect(url_for('edit_transaction',id=id))
+    # elif not category and not category.strip():
+    #     flash("Error: Category is mandatory")
+    #     return redirect(url_for('edit_transaction',id=id))
+    # elif not description and not description.strip():
+    #     flash("Error: Description is mandatory")
+    #     return redirect(url_for('edit_transaction',id=id))
+    # elif not date and not date.strip():
+    #     flash("Error: Date is mandatory")
+    #     return redirect(url_for('edit_transaction',id=id))
+    
+    # # Adding transaction to database
+    # transaction.Amount=amount
+    # transaction.Category=category
+    # transaction.Description=description
+    # transaction.DateTime=date
+    # transaction.Type=type
+    # db.session.commit()
+    # flash("Transaction successfully edited")
+    # return redirect(url_for('view_transactions'))
+
+@app.route('/view_budgets')
+def view_budgets():
+    # Implement this
+    budgets = Budgets.query.filter_by(UserID=session.get('UserID')).all()
+    return render_template('view_budgets.html',budgets=budgets)
+
+
+@app.route('/create_category',methods=["POST","GET"])
+def create_category():
+    # Creating a category and a budget
+    # Checking if the user is not logged in
+    if not session.get('UserID'):
+        return redirect(url_for('form_login'))
+    
+    if request.method == 'GET':
+        return render_template('create_category.html')
+    
+    budget=request.form["budget"]
+    category=request.form["category"]
+    type=request.form["type"]
+
+    # Checking for empty fields
+    if not budget and not budget.strip():
+        flash("Error: Amount is mandatory")
+        return redirect(url_for('create_category'))
+    elif not category and not category.strip():
+        flash("Error: Category is mandatory")
+        return redirect(url_for('create_category'))
+    elif not type and not type.strip():
+        flash("Error: Type is mandatory")
+        return redirect(url_for('create_category'))
+    
+    # Adding transaction to database
+    new_budget =Budgets(Category=category,
+                        UserID=session.get('UserID'),
+                        Budget=budget,
+                        Type=type
+                    )
+    db.session.add(new_budget)
+    db.session.commit()
+    flash("Budget successfully created")
+    return render_template('create_category.html')
+
+@app.route('/view_categories')
+def view_categories():
+    categories = Budgets.query.filter_by(UserID=session.get('UserID')).all()
+    return render_template('view_categories.html',categories=categories)
+
+@app.route('/edit_category/<int:id>',methods=["POST","GET"])
+def edit_category(id):
+    category = Budgets.query.get_or_404(id)
+    if request.method == 'GET':
+        return render_template('edit_category.html',category=category)
+    
+    budget=request.form["budget"]
+    category=request.form["category"]
+    type=request.form["type"]
+
+    # Checking for empty fields
+    if not budget and not budget.strip():
+        flash("Error: Amount is mandatory")
+        return redirect(url_for('edit_category',id=id))
+    elif not category and not category.strip():
+        flash("Error: Category is mandatory")
+        return redirect(url_for('edit_category',id=id))
+    elif not type and not type.strip():
+        flash("Error: Type is mandatory")
+        return redirect(url_for('edit_category',id=id))
+    
+    # Adding transaction to database
+    category.Budget=budget
+    category.Category=category
+    category.Type=type
+    db.session.commit()
+    flash("Category successfully edited")
+    return redirect(url_for('view_categories'))
+
+
+@app.route('/delete_category/<int:BudgetID>')
+def delete_category(BudgetID):
+    category = Budgets.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    flash("Category successfully deleted")
+    return redirect(url_for('view_categories'))
+
+@app.route('/view_master_table')
+def view_master_table():
+    pass
+    # categories = Budgets.query.filter_by(UserID=session.get('UserID')).all()
+    # incomes=[]
+    # expenses=[]
+    # differences=[]
+    # for category in categories:
+    #     if category.Type=="Income":
+    #         income = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type="Income").all()
+    #         incomes.append(income)
+    #     else:
+    #         expense = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type="Expense").all()
+    #         expenses.append(expense)
+    # return render_template('masterTable.html',income=income,expense=expense)
 
 if __name__=='__main__':
     app.run(debug=True)
