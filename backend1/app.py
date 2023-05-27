@@ -109,6 +109,7 @@ def login():
         return redirect(url_for('form_login'))
     
     else:
+        session['UserID'] = user.UserID
         return render_template('home.html')
     
     
@@ -164,8 +165,53 @@ def register():
                 )
     db.session.add(new_user)
     db.session.commit()
-
+    flash("Account successfully registered")
     return render_template('login.html')
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+@app.route('/add_transaction',methods=["POST","GET"])
+def add_transaction():
+    if request.method == 'GET':
+        return render_template('addTransaction.html')
+    
+    amount=request.form["amount"]
+    category=request.form["category"]
+    description=request.form["description"]
+    date=request.form["date"]
+
+    # Checking for empty fields
+    if not amount and not amount.strip():
+        flash("Error: Amount is mandatory")
+        return redirect(url_for('add_transaction'))
+    elif not category and not category.strip():
+        flash("Error: Category is mandatory")
+        return redirect(url_for('add_transaction'))
+    elif not description and not description.strip():
+        flash("Error: Description is mandatory")
+        return redirect(url_for('add_transaction'))
+    elif not date and not date.strip():
+        flash("Error: Date is mandatory")
+        return redirect(url_for('add_transaction'))
+    
+    # Adding transaction to database
+    new_transaction =Transactions( Amount=amount,
+                                    Category=category,
+                                    Description=description,
+                                    DateTime=date,
+                                    UserID=session.get('UserID')
+                                )
+    db.session.add(new_transaction)
+    db.session.commit()
+    flash("Transaction successfully added")
+    return render_template('addTransaction.html')
+
+@app.route('/view_transactions')
+def view_transactions():
+    transactions = Transactions.query.filter_by(UserID=session.get('UserID')).all()
+    return render_template('viewTransactions.html',transactions=transactions)
 
 if __name__=='__main__':
     app.run(debug=True)
