@@ -27,8 +27,8 @@ def create_app(config_class = Config):
 
 
     # Registering the blueprints here
-    # from app.refugee_endpoints import bp as refugee_bp
-    # app.register_blueprint(refugee_bp)
+    from app.admin_endpoints import bp as admin_bp
+    app.register_blueprint(admin_bp)
 
     
     # @app.route('/test/')
