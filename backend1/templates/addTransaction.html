@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 <body bgcolor="#F8F1F1">
-    {% with messages= get_flashed_messages()%}
+    <!--{% with messages= get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-info">
@@ -17,16 +17,24 @@
                 </div>
             {% endfor %}
         {% endif %}
-    {% endwith %}
+    {% endwith %}-->
     <form action="{{url_for('add_transaction')}}" method="POST" style="margin-left: 40%;margin-top: 5%;">
-        <label for="description">Description</label><br>
+        <label style="color:#025464;" for="description">Description</label><br>
         <input type="text" name="description" placeholder="Enter Description" required autofocus><br><br>
-        <label for="amount">Amount</label><br>
+        <label style="color:#025464;" for="amount">Amount</label><br>
         <input type="number" name="amount" placeholder="Enter Amount" required autofocus><br><br>
-        <label for="date">Date</label><br>
+        <label style="color:#025464;" for="date">Date</label><br>
         <input type="date" name="date" placeholder="Enter Date" required autofocus><br><br>
-        <label for="category">Category</label><br>
+        <label for="category" style="color:#025464;">Category</label><br>
         <input type="text" name="category" placeholder="Enter Category" required autofocus><br><br>
+        <p style="color:#025464;">Select Type</p>
+        <input type="radio" id="income" name="type" value="Income">
+        <label for="Income">Income</label><br>
+        <input type="radio" id="Expense" name="type" value="Expense">
+        <label for="Expense">Expense</label><br><br><br>
+
+
         <button style="color:aliceblue; background-color:#025464;" ><h3>Add Transaction</h3></button>
+
     </form>
 </body>
