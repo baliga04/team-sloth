@@ -47,7 +47,7 @@
     </head>
     <body bgcolor="#F8F1F1">
         <h2>Transactions</h2>
-        <input type="submit" value="Add Transaction" style="margin-left:75%;"><br>
+        <a href="{{url_for('add_transaction')}}"><input type="submit" value="Add Transaction" style="margin-left:75%;"></a><br>
         <table style="width:100%" class="container">
             <tr class="table-header">
               <th>Date</th>
@@ -58,9 +58,9 @@
             {% for transaction in transactions %}
                 <tr class="table-row">
                 <td>{{transaction.DateTime}}</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
+                <td>{{transaction.Category}}</td>
+                <td>{{transaction.Description}}</td>
+                <td>{{transaction.Amount}}</td>
                 </tr>
             {% endfor %}
           </table>

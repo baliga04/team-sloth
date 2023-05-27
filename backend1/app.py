@@ -80,8 +80,11 @@ def validate_password(password):
     return True  
 
 @app.route('/')
-def p1():
-    return render_template('landingpage.html')
+def landingpage():
+    loggedIn=False
+    if session.get('UserID'):
+        loggedIn=True
+    return render_template('landingpage.html',loggedIn=loggedIn)
 
 @app.route('/form_login')
 def form_login():
@@ -90,6 +93,13 @@ def form_login():
 @app.route('/form_registration')
 def form_registration():
     return render_template('registration.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if not session.get('UserID'):
+        return redirect(url_for('form_login'))
+    
+    return render_template('dashboard.html')
     
 @app.route('/login',methods=["POST"])
 def login():
@@ -110,12 +120,19 @@ def login():
     
     else:
         session['UserID'] = user.UserID
-        return render_template('home.html')
+        return redirect(url_for('dashboard'))
     
-    
+@app.route('/logout')
+def logout():
+    session.pop('UserID', None)
+    return redirect(url_for('landingpage'))
 
 @app.route('/register', methods=['POST','GET'])
 def register():
+    # Checking if the user is logged in
+    if session.get('UserID'):
+        return redirect(url_for('dashboard'))
+    
     if request.method == 'GET':
         return render_template('registration.html')
 
@@ -168,12 +185,13 @@ def register():
     flash("Account successfully registered")
     return render_template('login.html')
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 @app.route('/add_transaction',methods=["POST","GET"])
 def add_transaction():
+    # Checking if the user is not logged in
+    if not session.get('UserID'):
+        return redirect(url_for('form_login'))
+    
     if request.method == 'GET':
         return render_template('addTransaction.html')
     
@@ -211,7 +229,7 @@ def add_transaction():
 @app.route('/view_transactions')
 def view_transactions():
     transactions = Transactions.query.filter_by(UserID=session.get('UserID')).all()
-    return render_template('viewTransactions.html',transactions=transactions)
+    return render_template('transaction.html',transactions=transactions)
 
 if __name__=='__main__':
     app.run(debug=True)

@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 <body bgcolor="#F8F1F1">
+    {% with messages= get_flashed_messages()%}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <form action="{{url_for('add_transaction')}}" method="POST" style="margin-left: 40%;margin-top: 5%;">
         <label for="description">Description</label><br>
         <input type="text" name="description" placeholder="Enter Description" required autofocus><br><br>

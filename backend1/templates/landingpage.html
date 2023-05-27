@@ -45,8 +45,13 @@
         </div>
       </ul>
       <ul  class="menu2">
-        <li><a href="{{url_for('form_login')}}">Login</a></li>
-        <li><a href="{{url_for('form_registration')}}">Sign Up</a></li>
+        {% if loggedIn %}
+          <li><a href="{{url_for('dashboard')}}">Dashboard</a></li>
+          <li><a href="{{url_for('logout')}}">Logout</a></li>
+        {% else %}
+          <li><a href="{{url_for('form_login')}}">Login</a></li>
+          <li><a href="{{url_for('form_registration')}}">Sign Up</a></li>
+        {% endif %}
       </ul>
 
     </nav>
@@ -56,7 +61,7 @@
          <p>"Empower Your Finances: Track, Manage, and Thrive. Streamline your personal finances with our user-friendly web app. Experience seamless user registration, authentication, expense tracking, budget management, financial insights, notifications, and reminders. Take control of your financial future today!"</p>
          <button class="button-30" role="button">Try for Free</button>
         </div>
-        <div class="img1"><img src="iimg1.jpeg" alt=""></div>
+        <div class="img1"><img src="{{ url_for('static',filename='iimg1.jpeg') }}" alt=""></div>
     </div>
   </div>
 </body>
