@@ -69,7 +69,11 @@ a {
         .dropdown {
         background-color: rgb(251, 222, 254);
         padding: 1em 0;
+<<<<<<< HEAD
         position: absolute; /*WITH RESPECT TO PARENT*/
+=======
+        position: absolute; 
+>>>>>>> b6703d0ba771ba7c84f6623134eda723bb10ba17
         display: none;
         border-radius: 8px;
         top: 35px;
