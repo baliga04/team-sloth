@@ -12,9 +12,9 @@ def create_user():
     user_details=request.get_json()
     email=user_details.get("email")
     password=user_details.get("password")
-    first_name=user_details.get("first name")
-    last_name=user_details.get("last name")
-    confirm_password=user_details.get("confirm password")
+    first_name=user_details.get("first_name")
+    last_name=user_details.get("last_name")
+    confirm_password=user_details.get("confirm_password")
 
     if User.query.filter_by(Email=email.strip()).first() is not None:
         return jsonify({"error":"User already exists"})
@@ -39,10 +39,14 @@ def create_user():
     hashed_password=bcrypt.generate_password_hash(password)
 
     #add user to database
-    new=User( FirstName=first_name,
-              Password=password,
+    new_user =User( FirstName=first_name,
+              Password=hashed_password,
               LastName=last_name,
               Email=email,
             )
-    db.session.add(new)
+    db.session.add(new_user)
     db.session.commit()
+
+    return jsonify({
+        "data": new_user.Email,
+    }),201
