@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CashCrafter-"The future of cash flow"</title>
-        <link rel="stylesheet" href="stylesLand.css">
+    <link href="{{url_for('static', filename = 'stylesLand.css')}}" rel="stylesheet">
         
 </head>
 <body>
@@ -13,7 +13,7 @@
   <div class="background">
     <nav class="navbar">
       <div class="logoandtitle">
-        <img class="logolanding" src="logo.jpg">
+        <img class="logolanding" src="{{url_for('static', filename='logo.jpg')}}">
         <div class="titlelogo">CashCrafter</div> 
        
       </div>
