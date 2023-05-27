@@ -228,10 +228,19 @@ def add_transaction():
                                     UserID=session.get('UserID'),
                                     Type=type
                                 )
+    
+    user = User.query.filter_by(UserID=session.get('UserID')).first()
+    if type == 'Income':
+        user.Balance += float(amount)
+    elif type == 'Expense':
+        user.Balance -= float(amount)
+
+    db.session.add(user)
     db.session.add(new_transaction)
     db.session.commit()
     flash("Transaction successfully added")
-    return render_template('addTransaction.html')
+    categories = Budgets.query.filter_by(UserID=session.get('UserID')).all()
+    return render_template('addTransaction.html',categories=categories)
 
 @app.route('/view_transactions',methods=["POST","GET"])
 def view_transactions():
