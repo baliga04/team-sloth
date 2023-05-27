@@ -83,22 +83,26 @@ def validate_password(password):
 def p1():
     return render_template('landingpage.html')
 
-
+@app.route('/form_login')
+def form_login():
+    return render_template('login.html')
     
 @app.route('/login',methods=["POST"])
 def login():
     # Recieving details of the camp logging in
-    email=request.form["Email"]
+    email=request.form["email"]
     password=request.form["password"]
 
     # Checking if the user exists
     user = User.query.filter_by(Email=email).first()
     if user is None:
-        return flash("Invalid user")
+        flash("Invalid username/password")
+        return redirect(url_for('form_login'))
 
     # Checking if the password matches
-    elif not bcrypt.check_password_hash(user.password,password):
-        return flash("Invalid password")
+    elif not bcrypt.check_password_hash(user.Password,password):
+        flash("Invalid username/password")
+        return redirect(url_for('form_login'))
     
     else:
         return render_template('home.html')

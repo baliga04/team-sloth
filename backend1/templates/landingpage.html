@@ -45,10 +45,8 @@
         </div>
       </ul>
       <ul  class="menu2">
-        <form action="/form_login" method="POST">
-        <li class="highlighter"><a href="/"><input type="submit" value="login" method="POST"></a></li>
-          <li class="highlighter"><a href="/"><input type="submit" value="create_user" method="POST"></a></li>
-        </form>
+        <li><a href="{{url_for('form_login')}}">Login</a></li>
+        <li><a href="/">Sign Up</a></li>
       </ul>
 
     </nav>
