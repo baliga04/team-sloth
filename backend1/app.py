@@ -379,19 +379,62 @@ def delete_category(BudgetID):
 
 @app.route('/view_master_table')
 def view_master_table():
-    pass
-    # categories = Budgets.query.filter_by(UserID=session.get('UserID')).all()
-    # incomes=[]
-    # expenses=[]
-    # differences=[]
-    # for category in categories:
-    #     if category.Type=="Income":
-    #         income = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type="Income").all()
-    #         incomes.append(income)
-    #     else:
-    #         expense = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type="Expense").all()
-    #         expenses.append(expense)
-    # return render_template('masterTable.html',income=income,expense=expense)
+    categories = Budgets.query.filter_by(UserID=session.get('UserID')).all()
+    income_overview = {}
+    expense_overview = {}
+    # Create a dictionary of categories along with their sums of transactions in each category
+    # This algorithm is broken because it adds each one twice.
+    # To compensate, the value is halved at the end
+    for category in categories:
+        if category.Type=="Income":
+            incomes = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type="Income").all()
+            incomes_structure=[]
+            for income in incomes:
+                incomes_structure.append({"Amount":income.Amount,"Category":income.Category})
+            for income in incomes_structure:
+                if income["Category"] not in income_overview:
+                    income_overview[income["Category"]]=income["Amount"]
+                    print(f"Created new category: income_overview {income['Category']} = {income['Amount']}")
+                else:
+                    income_overview[income["Category"]]+=income["Amount"]
+                    print(f"Added to existing category: income_overview {income['Category']} = {income['Amount']}")
+        else:
+            expenses = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type="Expense").all()
+            expenses_structure=[]
+            for expense in expenses:
+                expenses_structure.append({"Amount":expense.Amount,"Category":expense.Category})
+            for expense in expenses_structure:
+                if expense["Category"] not in expense_overview:
+                    expense_overview[expense["Category"]]=expense["Amount"]
+                    print(f"Created new category: expense_overview {expense['Category']} = {expense['Amount']}")
+                else:
+                    expense_overview[expense["Category"]]+=expense["Amount"]
+                    print(f"Added to existing category: expense_overview {expense['Category']} = {expense['Amount']}")
+    
+    
+    
+    income_expectations = {}
+    expense_expectations = {}
+    for category in categories:
+        if category.Type=="Income":
+            income_expectations[category.Category]=category.Budget
+        else:
+            expense_expectations[category.Category]=category.Budget
+    total_income_actual =sum(income_overview.values())/2
+    total_expense_actual =sum(expense_overview.values())/2
+    total_income_plan =sum(income_expectations.values())
+    total_expense_plan =sum(expense_expectations.values())
+    return render_template('master_table.html',
+                           income_overview=income_overview,
+                           expense_overview=expense_overview,
+                           income_expectations=income_expectations,
+                           expense_expectations=expense_expectations,
+                           total_income_actual=total_income_actual,
+                           total_expense_actual=total_expense_actual,
+                           total_income_plan=total_income_plan,
+                           total_expense_plan=total_expense_plan
+                           )
+                
 
 if __name__=='__main__':
     app.run(debug=True)

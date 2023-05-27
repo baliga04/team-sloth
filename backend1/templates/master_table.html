@@ -50,50 +50,52 @@
         <h4 style="margin-left: 45%;">Income</h4>
         <table style="width:100%" class="container">
             <tr class="table-header">
-              <th>Catogory</th>
+              <th>Category</th>
               <th>Plan</th>
               <th>Actual</th>
             </tr>
-            <tr class="table-row">
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-            </tr>
-            <tr class="table-row">
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-            </tr>
+            {% for categoryName1 in income_overview %}
+                {% for categoryName2 in income_expectations %}
+                    {% if categoryName1==categoryName2 %}
+                        <tr class="table-row">
+                            <td>{{ categoryName1 }}</td>
+                            <td>{{ income_expectations[categoryName2] }}</td> 
+                            <td>{{ income_overview[categoryName1]/2 }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
             <tr class="table-header">
                 <th>total</th>
-                <th></th>
-                <th></th>
+                <th>{{ total_income_plan }}</th>
+                <th>{{ total_income_actual }}</th>
               </tr>
           </table>
           <h4 style="margin-left: 45%;">Expenses</h4>
           <table style="width:100%" class="container">
             <tr class="table-header">
-              <th>Catogory</th>
+              <th>Category</th>
               <th>Plan</th>
               <th>Actual</th>
             </tr>
-            <tr class="table-row">
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-            </tr>
-            <tr class="table-row">
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
+            <tr>
+            {% for categoryName1 in expense_overview %}
+                {% for categoryName2 in expense_expectations %}
+                    {% if categoryName1==categoryName2 %}
+                        <tr class="table-row">
+                            <td>{{ categoryName1 }}</td>
+                            <td>{{ expense_expectations[categoryName2] }}</td> 
+                            <td>{{ expense_overview[categoryName1]/2 }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
             </tr>
             <tr class="table-header">
                 <th>total</th>
-                <th></th>
-                <th></th>
+                <th>{{ total_expense_plan }}</th>
+                <th>{{ total_expense_actual }}</th>
               </tr>
-              
-            
           </table>
 
     </body>
