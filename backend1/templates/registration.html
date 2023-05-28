@@ -12,8 +12,8 @@
     {% with messages= get_flashed_messages()%}
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-info">
-                    {{ message }}
+                <div class="alert">
+                    <p style="color:red;border-style: solid;">{{ message }}</p>
                 </div>
             {% endfor %}
         {% endif %}

@@ -210,6 +210,13 @@ position: absolute;
     }
 
 }
+.alert {
+    padding: 20px;
+    background-color: #cae9fc;
+    color: white;
+  font-size:large;
+  border-style: solid;
+}
 
 
 
