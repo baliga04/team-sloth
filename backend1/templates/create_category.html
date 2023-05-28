@@ -13,11 +13,12 @@
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-info">
-                    {{ message }}
+                    <p style="color:rgb(0, 255, 68);">{{ message }}</p>
                 </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
+    <
     <form action="{{url_for('create_category')}}" method="POST" style="margin-left: 40%;margin-top: 5%;">
         <label for="category" style="color:#025464;">Category Name</label><br>
         <input type="text" name="category" placeholder="Enter Category" required autofocus><br><br>

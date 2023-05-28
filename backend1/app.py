@@ -114,6 +114,7 @@ def dashboard():
     for income in incomes:
         total_income += income.Amount
 
+    print(balance)
     # Getting the User's recent 5 transactions
     transactions = Transactions.query.filter_by(UserID=session.get('UserID')).order_by(Transactions.DateTime.desc()).limit(5).all()
     return render_template('dashboard.html',balance=balance, total_expenses=total_expenses, total_income=total_income,transactions=transactions)
