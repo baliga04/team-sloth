@@ -113,7 +113,10 @@ def dashboard():
     incomes = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type='Income')
     for income in incomes:
         total_income += income.Amount
-    return render_template('dashboard.html',balance=balance, total_expenses=total_expenses, total_income=total_income)
+
+    # Getting the User's recent 5 transactions
+    transactions = Transactions.query.filter_by(UserID=session.get('UserID')).order_by(Transactions.DateTime.desc()).limit(5).all()
+    return render_template('dashboard.html',balance=balance, total_expenses=total_expenses, total_income=total_income,transactions=transactions)
     
 @app.route('/login',methods=["POST"])
 def login():

@@ -133,46 +133,26 @@
 <!-- end of insights -->
 
 <div class="recent-orders">
-    <h2>Recent order</h2>
+    <h2>Recent Transactions</h2>
     <table>
         <thead>
             <tr>
-                <th>Recipient Name</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
                 <th>Amount</th>
-                <th>Payment</th>
-                <th>Status</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Mr.Koala</td>
-                <td>15,631</td>
-                <td>payed</td>
-                <td>success</td>
-                <td class="primary">Details</td>
-            </tr>
-            <tr>
-                <td>Mr. kangroo</td>
-                <td>8,631</td>
-                <td>due</td>
-                <td class="warning">pending</td>
-                <td class="primary">Details</td>
-            </tr>
-            <tr>
-                <td>Miss. spider</td>
-                <td>4561</td>
-                <td>payed</td>
-                <td>success</td>
-                <td class="primary">Details</td>
-            </tr>
-            <tr>
-                <td>Mr. Anaconda</td>
-                <td>45631</td>
-                <td>due</td>
-                <td class="warning">pending</td>
-                <td class="primary">Details</td>
-            </tr>
+            {% for transaction in transactions %}
+                <tr class="table-row">
+                <td>{{transaction.DateTime}}</td>
+                <td>{{transaction.Category}}</td>
+                <td>{{transaction.Description}}</td>
+                <td>{{transaction.Amount}}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
     <a href="{{url_for('view_transactions')}}">Show All</a>
