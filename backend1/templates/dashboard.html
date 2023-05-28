@@ -50,16 +50,12 @@
                     <span class="message-count">3</span>
                 </a>
                 <a href="{{url_for('create_category')}}">
-                    <span class="material-icons-sharp">report</span>
+                    <span class="material-icons-sharp">add</span>
                     <h3>Create a Budget and Category</h3>
                 </a>
                 <a href="{{url_for('view_categories')}}">
                     <span class="material-icons-sharp">settings</span>
                     <h3>View Budget and Categories</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">add</span>
-                    <h3>Add product(N)</h3>
                 </a>
                 <a href="{{url_for('logout')}}">
                     <span class="material-icons-sharp">logout</span>
@@ -81,7 +77,7 @@
                     <div class="middle">
                         <div class="left">
                             <h3>Total Balance</h3>
-                            <h1>$25,024</h1>
+                            <h1>${{ balance }}</h1>
                            </div>
                         <div class="progress">
                             <svg>
@@ -100,7 +96,7 @@
                 <div class="middle">
                     <div class="left">
                         <h3>Total Expenses</h3>
-                        <h1>$14,160</h1>
+                        <h1>${{total_expenses}}</h1>
                     </div>
                     <div class="progress">
                         <svg>
@@ -119,7 +115,7 @@
             <div class="middle">
                 <div class="left">
                     <h3>Total income</h3>
-                    <h1>$10,864</h1>
+                    <h1>${{total_income}}</h1>
                 </div>
                 <div class="progress">
                     <svg>
@@ -137,49 +133,29 @@
 <!-- end of insights -->
 
 <div class="recent-orders">
-    <h2>Recent order</h2>
+    <h2>Recent Transactions</h2>
     <table>
         <thead>
             <tr>
-                <th>Recipient Name</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
                 <th>Amount</th>
-                <th>Payment</th>
-                <th>Status</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Mr.Koala</td>
-                <td>15,631</td>
-                <td>payed</td>
-                <td>success</td>
-                <td class="primary">Details</td>
-            </tr>
-            <tr>
-                <td>Mr. kangroo</td>
-                <td>8,631</td>
-                <td>due</td>
-                <td class="warning">pending</td>
-                <td class="primary">Details</td>
-            </tr>
-            <tr>
-                <td>Miss. spider</td>
-                <td>4561</td>
-                <td>payed</td>
-                <td>success</td>
-                <td class="primary">Details</td>
-            </tr>
-            <tr>
-                <td>Mr. Anaconda</td>
-                <td>45631</td>
-                <td>due</td>
-                <td class="warning">pending</td>
-                <td class="primary">Details</td>
-            </tr>
+            {% for transaction in transactions %}
+                <tr class="table-row">
+                <td>{{transaction.DateTime}}</td>
+                <td>{{transaction.Category}}</td>
+                <td>{{transaction.Description}}</td>
+                <td>{{transaction.Amount}}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
-    <a href="#">Show All</a>
+    <a href="{{url_for('view_transactions')}}">Show All</a>
 </div>
         </main> 
         <!-- end of main -->

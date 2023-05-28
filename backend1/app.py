@@ -39,7 +39,7 @@ class User(db.Model):
     Balance: float = db.Column(db.Float, nullable=False,default=0.0)
 
     # On Delete Cascade
-    transactions = relationship("Transactions", backref="User",cascade="all, delete-orphan") 
+    transactions = relationship("Transactions", backref="User",cascade="all, delete-orphan", lazy="dynamic")
 
     def __repr__(self):
          return f'<User>'
@@ -102,8 +102,21 @@ def form_registration():
 def dashboard():
     if not session.get('UserID'):
         return redirect(url_for('form_login'))
-    
-    return render_template('dashboard.html')
+    # Getting the user's balance
+    user = User.query.filter_by(UserID=session.get('UserID')).first()
+    balance = user.Balance
+    total_expenses = 0
+    total_income = 0
+    expenses = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type='Expense')
+    for expense in expenses:
+        total_expenses += expense.Amount
+    incomes = Transactions.query.filter_by(UserID=session.get('UserID')).filter_by(Type='Income')
+    for income in incomes:
+        total_income += income.Amount
+
+    # Getting the User's recent 5 transactions
+    transactions = Transactions.query.filter_by(UserID=session.get('UserID')).order_by(Transactions.DateTime.desc()).limit(5).all()
+    return render_template('dashboard.html',balance=balance, total_expenses=total_expenses, total_income=total_income,transactions=transactions)
     
 @app.route('/login',methods=["POST"])
 def login():
