@@ -444,7 +444,9 @@ def view_master_table():
                            total_expense_plan=total_expense_plan
                            )
                 
-    
+@app.route('/view_notifications')
+def view_notifications():
+    return render_template('notification.html')
     
 if __name__=='__main__':
     app.run(debug=True)
