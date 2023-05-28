@@ -444,9 +444,6 @@ def view_master_table():
                            total_expense_plan=total_expense_plan
                            )
                 
-    @app.route('\create_category')
-    def create_category():
-        return render_template('create_category.html')
     
     
 if __name__=='__main__':
